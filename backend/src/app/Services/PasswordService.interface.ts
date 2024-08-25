@@ -1,5 +1,3 @@
-import bcrypt from "bcrypt";
-
 export default interface PasswordServiceInterface {
   hash(password: string): Promise<string>;
 
