@@ -9,7 +9,7 @@ export default class AuthController {
 
   public validate(req: express.Request, res: express.Response) {
     // O middleware fará a validação
-    res.status(200).json({});
+    res.status(200).json(req.auth);
   }
 
   public async logIn(req: express.Request, res: express.Response) {
@@ -18,13 +18,13 @@ export default class AuthController {
     const user = await this.authInteractor.signIn(logInUser);
 
     if (!user) {
-      res.status(401);
+      res.status(401).end();
       return;
     }
 
     signIn({ id: user.id, email: user.email }, res);
 
-    res.status(200).json({});
+    res.status(200).json({ id: user.id, email: user.email });
   }
 
   async create(req: express.Request, res: express.Response) {
@@ -45,6 +45,6 @@ export default class AuthController {
   public logOut(req: express.Request, res: express.Response) {
     signOut(res);
 
-    res.status(200);
+    res.status(200).end();
   }
 }

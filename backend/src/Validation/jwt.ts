@@ -39,10 +39,14 @@ const REFRESH_TOKEN: jsonwt.SignOptions = {
   algorithm: ALGORITHM,
 };
 
-const AUTH_COOKIE_OPTIONS: express.CookieOptions = {};
+const AUTH_COOKIE_OPTIONS: express.CookieOptions = {
+  sameSite: 'none',
+  secure: true,
+};
 const REFRESH_COOKIE_OPTIONS: express.CookieOptions = {
   httpOnly: true,
-  sameSite: "strict",
+  sameSite: 'none',
+  secure: true,
 };
 
 const SECRET = "SECRET";
@@ -53,6 +57,7 @@ export function jwtMiddleware({
   refreshAccessToken,
 }: JwtInfo): JwtMiddleware {
   return (req, res, next) => {
+    console.log(req.cookies);
     const tokenFields = getTokens(req);
     if (
       tokenFields.get(AuthToken.AccessToken) === undefined ||
@@ -118,11 +123,11 @@ export function jwtErrorHandler(
   switch (err.name) {
     case "TokenExpiredError":
       // Token valido porem expirado
-      res.status(401).json({ error: err.message });
+      res.status(401).end();
       return;
     case "JsonWebTokenError":
       // Caso sem token ou token mal formatado.
-      res.status(401).json({ error: err.message });
+      res.status(401).end();
       return;
   }
 
@@ -141,8 +146,8 @@ export function signIn(token: Auth, res: express.Response) {
 }
 
 export function signOut(res: express.Response) {
-  res.cookie(AuthToken.AccessToken, "");
-  res.cookie(AuthToken.RefreshToken, "");
+  res.cookie(AuthToken.AccessToken, "", {sameSite: 'none', secure: true});
+  res.cookie(AuthToken.RefreshToken, "", {sameSite: 'none', secure: true});
 }
 
 // Private functions

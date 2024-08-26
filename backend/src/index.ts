@@ -26,13 +26,19 @@ import { StateRepositoryPrisma } from "./Infrastructure/Repositories/StateReposi
 import StateInteractor from "./Infrastructure/Interactors/StateInteractor";
 import CityInteractor from "./Infrastructure/Interactors/CityInteractor";
 
-import cors from 'cors';
+import cors from "cors";
 
 const PORT = 3000;
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -42,8 +48,8 @@ const getTokens = (req: express.Request): TokenMap => {
     [AuthToken.RefreshToken, req.cookies[AuthToken.RefreshToken]],
   ]);
 };
-const refreshAccessToken = (refreshToken: Auth) => {
-  const auth = refreshToken;
+const refreshAccessToken = (authRefreshToken: Auth) => {
+  const auth = authRefreshToken;
 
   return { id: auth.id, email: auth.email };
 };
@@ -72,12 +78,19 @@ LocationRoutes(app, countryInteractor, stateInteractor, cityInteractor);
 
 app.use(jwtErrorHandler);
 
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  res.status(500).json({
-    error: "Internal server error",
-  });
-  return;
-})
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    res.status(500).json({
+      error: "Internal server error",
+    });
+    return;
+  },
+);
 
 app.listen(PORT, () => {
   console.log(`Running on: http://localhost:${PORT}`);
