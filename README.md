@@ -63,3 +63,5 @@ Good luck! Any doubts, feel free to send an email to cv@medcloud.com.br.
 ## For the day of the technical interview and code review
 
 On the date set by the recruiter, have your application running on your local machine to run the tests and to show us the points developed and possible questions. We will do a code review together with you as if you were already on our team, you will be able to explain what you thought, how you architected and how the project can evolve. Good luck!
+
+# Para consumir a API é necessário trocar no arquivo: /frontend/src/axios/api.ts a base_url da API
