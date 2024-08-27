@@ -1,0 +1,3 @@
+interface RegisterUserError {
+  email: string;
+}
