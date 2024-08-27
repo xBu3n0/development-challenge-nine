@@ -5,16 +5,18 @@ import StateInteractorInterface from "@/app/Interactors/StateInteractor.interfac
 import CityInteractorInterface from "@/app/Interactors/CityInteractor.interface";
 import StateController from "../Controllers/State.controller";
 import CityController from "../Controllers/City.controller";
+import ValidateServiceInterface from "@/app/Services/ValidateService.interface";
 
 export function LocationRoutes(
   app: express.Express,
   countryInteractor: CountryInteractorInterface,
   stateInteractor: StateInteractorInterface,
   cityInteractor: CityInteractorInterface,
+  validateService: ValidateServiceInterface
 ): void {
-  const countryController = new CountryController(countryInteractor);
-  const stateController = new StateController(stateInteractor);
-  const cityController = new CityController(cityInteractor);
+  const countryController = new CountryController(countryInteractor, validateService);
+  const stateController = new StateController(stateInteractor, validateService);
+  const cityController = new CityController(cityInteractor, validateService);
 
   app.get("/api/countries", countryController.list.bind(countryController));
   app.get("/api/countries/:countryId", countryController.findById.bind(countryController));

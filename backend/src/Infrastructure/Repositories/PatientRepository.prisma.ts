@@ -5,6 +5,7 @@ import PatientRepositoryInterface from "@/app/Repositories/PatientRepository.int
 import Patient from "@/app/Entities/Patient.entity";
 import CreatePatient from "@/app/Entities/CreatePatient.entity";
 import UpdatePatient from "@/app/Entities/UpdatePatient.entity";
+import { FullPatient } from "@/app/Entities/FullPatient";
 
 export class PatientRepositoryPrisma implements PatientRepositoryInterface {
   constructor(private readonly conn: Prisma.PatientDelegate<DefaultArgs>) {}
@@ -14,6 +15,12 @@ export class PatientRepositoryPrisma implements PatientRepositoryInterface {
       where: {
         userId: ownerId,
       },
+      orderBy: {
+        name: "asc",
+      },
+      include: {
+        city: true
+      }
     });
   }
 
@@ -29,18 +36,35 @@ export class PatientRepositoryPrisma implements PatientRepositoryInterface {
       where: {
         userId: ownerId,
       },
+      orderBy: {
+        name: "asc",
+      },
+      include: {
+        city: true
+      }
     });
   }
 
   public async findById(
     ownerId: string,
     patientId: string,
-  ): Promise<Patient | null> {
+  ): Promise<FullPatient | null> {
     return this.conn.findFirst({
       where: {
         id: patientId,
         userId: ownerId,
       },
+      include: {
+        city: {
+          include: {
+            state: {
+              include: {
+                country: true
+              }
+            }
+          }
+        },
+      }
     });
   }
 
@@ -48,6 +72,8 @@ export class PatientRepositoryPrisma implements PatientRepositoryInterface {
     ownerId: string,
     patient: CreatePatient,
   ): Promise<Patient> {
+    console.log(ownerId, patient);
+
     return this.conn.create({
       data: {
         name: patient.name,
@@ -56,6 +82,9 @@ export class PatientRepositoryPrisma implements PatientRepositoryInterface {
         userId: ownerId,
         cityId: patient.cityId,
       },
+      include: {
+        city: true
+      }
     });
   }
 
@@ -76,6 +105,9 @@ export class PatientRepositoryPrisma implements PatientRepositoryInterface {
         email: patient.email,
         cityId: patient.cityId,
       },
+      include: {
+        city: true
+      }
     });
   }
 
@@ -88,6 +120,9 @@ export class PatientRepositoryPrisma implements PatientRepositoryInterface {
         id: patientId,
         userId: ownerId,
       },
+      include: {
+        city: true
+      }
     });
   }
 }

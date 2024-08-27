@@ -8,7 +8,11 @@ export class StateRepositoryPrisma implements StateRepositoryInterface {
   constructor(private readonly conn: Prisma.StateDelegate<DefaultArgs>) {}
 
   public getAll(): Promise<State[]> {
-    return this.conn.findMany();
+    return this.conn.findMany({
+      orderBy: {
+        name: "asc",
+      }
+    });
   }
 
   public findById(id: string): Promise<State | null> {
@@ -32,6 +36,9 @@ export class StateRepositoryPrisma implements StateRepositoryInterface {
       where: {
         countryId,
       },
+      orderBy: {
+        name: "asc",
+      }
     });
   }
 }

@@ -7,20 +7,74 @@ import CreateUser from "@/app/Entities/CreateUser.entity";
 
 export default class ValidateService implements ValidateServiceInterface {
   validateUuid(uuid: string): boolean {
-    return z.string().isUUID;
+    const validate = z.object({
+      uuid: z.string().uuid()
+    });
+
+    const result = validate.safeParse({
+      uuid,
+    });
+
+    return result.success;
   }
 
   validateCreateUser(createUser: CreateUser): boolean {
-    return true;
+    const validate = z.object({
+      email: z.string().email(),
+      password: z.string().min(4)
+    });
+
+    const result = validate.safeParse({
+      email: createUser.email,
+      password: createUser.password
+    });
+
+    return result.success;
   }
 
   validatePatient(patient: Patient): boolean {
-    return true;
+    const validate = z.object({
+      name: z.string(),
+      email: z.string().email(),
+      cityId: z.string().uuid(),
+    });
+
+    const result = validate.safeParse({
+      name: patient.name,
+      email: patient.email,
+      cityId: patient.cityId
+    });
+
+    return result.success;
   }
   validateCreatePatient(createPatient: CreatePatient): boolean {
-    return true;
+    const validate = z.object({
+      name: z.string(),
+      email: z.string().email(),
+      cityId: z.string().uuid(),
+    });
+
+    const result = validate.safeParse({
+      name: createPatient.name,
+      email: createPatient.email,
+      cityId: createPatient.cityId
+    });
+
+    return result.success;
   }
   validateUpdatePatient(updatePatient: UpdatePatient): boolean {
-    return true;
+    const validate = z.object({
+      name: z.string(),
+      email: z.string().email(),
+      cityId: z.string().uuid(),
+    });
+
+    const result = validate.safeParse({
+      name: updatePatient.name,
+      email: updatePatient.email,
+      cityId: updatePatient.cityId
+    });
+
+    return result.success;
   }
 }

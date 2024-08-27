@@ -3,9 +3,10 @@ import PatientInteractorInterface from "@/app/Interactors/PatientInteractor.inte
 import CreatePatient from "@/app/Entities/CreatePatient.entity";
 import UpdatePatient from "@/app/Entities/UpdatePatient.entity";
 import Patient from "@/app/Entities/Patient.entity";
+import ValidateServiceInterface from "@/app/Services/ValidateService.interface";
 
 export default class PatientController {
-  constructor(private readonly patientInteractor: PatientInteractorInterface) {}
+  constructor(private readonly patientInteractor: PatientInteractorInterface, private readonly validateService: ValidateServiceInterface) {}
 
   public async list(req: express.Request, res: express.Response) {
     const patients = await this.patientInteractor.list(req.auth.id);
@@ -15,6 +16,10 @@ export default class PatientController {
 
   public async create(req: express.Request, res: express.Response) {
     const createPatient = req.body as CreatePatient;
+    if(!this.validateService.validateCreatePatient(createPatient)) {
+      res.status(400).end();
+      return;
+    }
 
     try {
       const patient = await this.patientInteractor.create(
@@ -34,6 +39,11 @@ export default class PatientController {
     const patientId = req.params.id;
     const updatePatient = req.body as UpdatePatient;
 
+    if(!this.validateService.validateUuid(patientId) || !this.validateService.validateCreatePatient(updatePatient)) {
+      res.status(400).end();
+      return;
+    }
+
     try {
       const patient = await this.patientInteractor.update(
         req.auth.id,
@@ -51,6 +61,10 @@ export default class PatientController {
 
   public async delete(req: express.Request, res: express.Response) {
     const patientId = req.params.id;
+    if(!this.validateService.validateUuid(patientId)) {
+      res.status(400).end();
+      return;
+    }
 
     try {
       const patient = await this.patientInteractor.delete(
@@ -65,6 +79,10 @@ export default class PatientController {
 
   public async findById(req: express.Request, res: express.Response) {
     const patientId = req.params.id;
+    if(!this.validateService.validateUuid(patientId)) {
+      res.status(400).end();
+      return;
+    }
 
     const patient = await this.patientInteractor.findById(
       req.auth.id,

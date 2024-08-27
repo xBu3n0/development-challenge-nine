@@ -1,8 +1,9 @@
 import express from "express";
 import CityInteractorInterface from "@/app/Interactors/CityInteractor.interface";
+import ValidateServiceInterface from "@/app/Services/ValidateService.interface";
 
 export default class CityController {
-  constructor(private readonly cityInteractor: CityInteractorInterface) {}
+  constructor(private readonly cityInteractor: CityInteractorInterface, private readonly validateService: ValidateServiceInterface) {}
 
   public async list(req: express.Request, res: express.Response) {
     const countries = await this.cityInteractor.list();
@@ -12,6 +13,10 @@ export default class CityController {
 
   public async findById(req: express.Request, res: express.Response) {
     const cityId = req.params.cityId;
+    if(!this.validateService.validateUuid(cityId)) {
+      res.status(400).end();
+      return;
+    }
 
     const city = await this.cityInteractor.findById(cityId);
 
@@ -36,6 +41,10 @@ export default class CityController {
 
   public async findByState(req: express.Request, res: express.Response) {
     const stateId = req.params.stateId;
+    if(!this.validateService.validateUuid(stateId)) {
+      res.status(400).end();
+      return;
+    }
 
     const cities = await this.cityInteractor.findByState(stateId);
 

@@ -2,13 +2,15 @@ import express from "express";
 import { JwtMiddleware } from "@/Validation/jwt";
 import PatientController from "../Controllers/Patient.controller";
 import PatientInteractorInterface from "@/app/Interactors/PatientInteractor.interface";
+import ValidateServiceInterface from "@/app/Services/ValidateService.interface";
 
 export function PatientRoutes(
   app: express.Express,
   jwtMiddleware: JwtMiddleware,
   patientInteractor: PatientInteractorInterface,
+  validateService: ValidateServiceInterface
 ): void {
-  const patientController = new PatientController(patientInteractor);
+  const patientController = new PatientController(patientInteractor, validateService);
 
   app.use("/api/patients", jwtMiddleware);
 

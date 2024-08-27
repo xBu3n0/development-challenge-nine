@@ -3,6 +3,7 @@ import CreatePatient from "@/app/Entities/CreatePatient.entity";
 import PatientInteractorInterface from "@/app/Interactors/PatientInteractor.interface";
 import PatientRepositoryInterface from "@/app/Repositories/PatientRepository.interface";
 import UpdatePatient from "@/app/Entities/UpdatePatient.entity";
+import { FullPatient } from "@/app/Entities/FullPatient";
 
 export default class PatientInteractor implements PatientInteractorInterface {
   constructor(private readonly patientRepository: PatientRepositoryInterface) {}
@@ -21,7 +22,7 @@ export default class PatientInteractor implements PatientInteractorInterface {
   public async findById(
     ownerId: string,
     patientId: string,
-  ): Promise<Patient | null> {
+  ): Promise<FullPatient | null> {
     return this.patientRepository.findById(ownerId, patientId);
   }
 

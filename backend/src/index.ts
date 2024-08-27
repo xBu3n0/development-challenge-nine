@@ -27,6 +27,7 @@ import StateInteractor from "./Infrastructure/Interactors/StateInteractor";
 import CityInteractor from "./Infrastructure/Interactors/CityInteractor";
 
 import cors from "cors";
+import ValidateService from "./Infrastructure/Services/ValidateService";
 
 const PORT = 3000;
 
@@ -72,9 +73,11 @@ const countryInteractor = new CountryInteractor(countryRepository);
 const stateInteractor = new StateInteractor(stateRepository);
 const cityInteractor = new CityInteractor(cityRepository);
 
-AuthRoutes(app, jsonwtMiddleware, authInteractor);
-PatientRoutes(app, jsonwtMiddleware, patientInteractor);
-LocationRoutes(app, countryInteractor, stateInteractor, cityInteractor);
+const validateService = new ValidateService();
+
+AuthRoutes(app, jsonwtMiddleware, authInteractor, validateService);
+PatientRoutes(app, jsonwtMiddleware, patientInteractor, validateService);
+LocationRoutes(app, countryInteractor, stateInteractor, cityInteractor, validateService);
 
 app.use(jwtErrorHandler);
 

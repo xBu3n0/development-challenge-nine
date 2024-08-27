@@ -3,9 +3,10 @@ import LogInUser from "@/app/Entities/LogInUser.entity";
 import express from "express";
 import { signIn, signOut } from "./../../Validation/jwt";
 import CreateUser from "./../../app/Entities/CreateUser.entity";
+import ValidateServiceInterface from "@/app/Services/ValidateService.interface";
 
 export default class AuthController {
-  constructor(private readonly authInteractor: AuthInteractorInterface) {}
+  constructor(private readonly authInteractor: AuthInteractorInterface, private readonly validateService: ValidateServiceInterface) {}
 
   public validate(req: express.Request, res: express.Response) {
     // O middleware fará a validação
@@ -14,6 +15,7 @@ export default class AuthController {
 
   public async logIn(req: express.Request, res: express.Response) {
     const logInUser = req.body as LogInUser;
+
 
     const user = await this.authInteractor.signIn(logInUser);
 
@@ -29,6 +31,11 @@ export default class AuthController {
 
   async create(req: express.Request, res: express.Response) {
     const newUser = req.body as CreateUser;
+    
+    if(!this.validateService.validateCreateUser(newUser)) {
+      res.status(400).end();
+      return;
+    }
 
     try {
       const user = await this.authInteractor.create(newUser);

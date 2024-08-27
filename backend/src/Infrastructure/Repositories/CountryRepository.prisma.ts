@@ -8,7 +8,11 @@ export class CountryRepositoryPrisma implements CountryRepositoryInterface {
   constructor(private readonly conn: Prisma.CountryDelegate<DefaultArgs>) {}
 
   public getAll(): Promise<Country[]> {
-    return this.conn.findMany();
+    return this.conn.findMany({
+      orderBy: {
+        name: "asc",
+      }
+    });
   }
 
   public findById(id: string): Promise<Country | null> {

@@ -2,10 +2,11 @@ import { PrismaClient } from "@prisma/client";
 import Patient from "@/app/Entities/Patient.entity";
 import CreatePatient from "@/app/Entities/CreatePatient.entity";
 import UpdatePatient from "@/app/Entities/UpdatePatient.entity";
+import { FullPatient } from "../Entities/FullPatient";
 
 export default interface PatientRepositoryInterface {
   getAll(ownerId: string): Promise<Patient[]>;
-  findById(ownerId: string, patientId: string): Promise<Patient | null>;
+  findById(ownerId: string, patientId: string): Promise<FullPatient | null>;
   findByName(ownerId: string, name: string): Promise<Patient | null>;
   findByOwner(ownerId: string): Promise<Patient[]>;
 

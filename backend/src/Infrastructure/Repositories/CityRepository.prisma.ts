@@ -8,7 +8,11 @@ export class CityRepositoryPrisma implements CityRepositoryInterface {
   constructor(private readonly conn: Prisma.CityDelegate<DefaultArgs>) {}
 
   public getAll(): Promise<City[]> {
-    return this.conn.findMany();
+    return this.conn.findMany({
+      orderBy: {
+        name: "asc",
+      }
+    });
   }
 
   public findById(id: string): Promise<City | null> {
@@ -32,6 +36,9 @@ export class CityRepositoryPrisma implements CityRepositoryInterface {
       where: {
         stateId,
       },
+      orderBy: {
+        name: "asc",
+      }
     });
   }
 }
