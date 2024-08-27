@@ -56,7 +56,7 @@ model State {
 
   cities City[]
 
-  county    Country @relation(fields: [countryId], references: [id])
+  country    Country @relation(fields: [countryId], references: [id])
   countryId String
 }
 
