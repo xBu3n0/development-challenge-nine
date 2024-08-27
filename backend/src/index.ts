@@ -29,13 +29,15 @@ import CityInteractor from "./Infrastructure/Interactors/CityInteractor";
 import cors from "cors";
 import ValidateService from "./Infrastructure/Services/ValidateService";
 
-const PORT = 3000;
+const PORT = process.env["PORT"]!;
 
 const app = express();
 
+console.log(process.env["FRONTEND_URL"]!)
+
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: process.env["FRONTEND_URL"]!,
     credentials: true,
   }),
 );

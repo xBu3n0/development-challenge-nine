@@ -31,11 +31,11 @@ type JwtInfo = {
 const ALGORITHM: jsonwt.Algorithm = "HS256";
 
 const AUTH_TOKEN: jsonwt.SignOptions = {
-  expiresIn: 10,
+  expiresIn: 60,
   algorithm: ALGORITHM,
 };
 const REFRESH_TOKEN: jsonwt.SignOptions = {
-  expiresIn: "5min",
+  expiresIn: "1h",
   algorithm: ALGORITHM,
 };
 
@@ -49,7 +49,7 @@ const REFRESH_COOKIE_OPTIONS: express.CookieOptions = {
   secure: true,
 };
 
-const SECRET = "SECRET";
+const SECRET = process.env["SECRET"]!;
 
 // Public functions
 export function jwtMiddleware({
